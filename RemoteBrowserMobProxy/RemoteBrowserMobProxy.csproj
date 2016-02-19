@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\BandwidthLimits.cs" />
     <Compile Include="Data\BlackList.cs" />
     <Compile Include="Data\HarOptions.cs" />
     <Compile Include="Data\HarPageOptions.cs" />

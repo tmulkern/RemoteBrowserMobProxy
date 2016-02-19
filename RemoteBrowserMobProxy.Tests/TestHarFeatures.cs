@@ -7,20 +7,20 @@ namespace RemoteBrowserMobProxy.Tests
     [TestFixture]
     public class TestHarFeatures : TestBase
     {
-        [TestFixtureSetUp]
-        public void FixtureSetup()
+        [OneTimeSetUp]
+        public override void FixtureSetup()
         {
             base.FixtureSetup();
         }
 
         [SetUp]
-        public void Setup()
+        public override void Setup()
         {
             base.Setup();
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
             base.TearDown();
         }  
