@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using RemoteBrowserMobProxy.DataClasses;
+using HarSharp;
+using RemoteBrowserMobProxy.Data;
 using RestSharp;
 
 namespace RemoteBrowserMobProxy
@@ -35,13 +36,19 @@ namespace RemoteBrowserMobProxy
             var res = _restClient.Execute(req);
         }
 
-        public string GetHarContent(HarOptions options)
+        public string GetHarContentString(HarOptions options)
         {
             var req = new RestRequest("har", Method.GET);
 
             req.AddObject(options);
             var res = _restClient.Execute(req);
             return res.Content;
+        }
+
+        public Har GetHarContent(HarOptions options)
+        {
+            var harString = GetHarContentString(options);
+            return HarConvert.Deserialize(harString);
         }
 
         public void SetWhiteList(WhiteList whiteList)

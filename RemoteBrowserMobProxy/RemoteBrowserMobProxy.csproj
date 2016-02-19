@@ -30,16 +30,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FastMember, Version=1.0.0.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastMember.1.0.0.11\lib\net40\FastMember.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Flurl, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.1.0.10\lib\portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+MonoTouch10\Flurl.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="HarSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HarSharp.1.0.0\lib\net45\HarSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HelperSharp, Version=1.0.5358.23405, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelperSharp.0.0.4.1\lib\net35\HelperSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -48,6 +52,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,23 +60,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataClasses\BlackList.cs" />
-    <Compile Include="DataClasses\HarOptions.cs" />
-    <Compile Include="DataClasses\HarPageOptions.cs" />
-    <Compile Include="DataClasses\IpEntry.cs" />
-    <Compile Include="DataClasses\ProxyTimeouts.cs" />
-    <Compile Include="DataClasses\Response\CreateHarResponse.cs" />
-    <Compile Include="DataClasses\UrlReWrite.cs" />
-    <Compile Include="DataClasses\UserAccount.cs" />
-    <Compile Include="DataClasses\WaitTimeouts.cs" />
-    <Compile Include="DataClasses\WhiteList.cs" />
+    <Compile Include="Data\BlackList.cs" />
+    <Compile Include="Data\HarOptions.cs" />
+    <Compile Include="Data\HarPageOptions.cs" />
+    <Compile Include="Data\IpEntry.cs" />
+    <Compile Include="Data\ProxyTimeouts.cs" />
+    <Compile Include="Data\Response\CreateHarResponse.cs" />
+    <Compile Include="Data\UrlReWrite.cs" />
+    <Compile Include="Data\UserAccount.cs" />
+    <Compile Include="Data\WaitTimeouts.cs" />
+    <Compile Include="Data\WhiteList.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="RemoteBrowserMobProxyClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteBrowserMobProxyInstance.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="RemoteBrowserMobProxy.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

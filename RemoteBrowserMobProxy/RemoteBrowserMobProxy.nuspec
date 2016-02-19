@@ -8,8 +8,6 @@
     <owners>$author$</owners>
     <projectUrl>https://github.com/tmulkern/RemoteBrowserMobProxy</projectUrl>
     <description>$description$</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright 2015</copyright>
-    <tags>Tag1 Tag2</tags>
+    <tags>BrowserMob Proxy</tags>
   </metadata>
 </package>

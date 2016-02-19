@@ -1,4 +1,4 @@
-﻿namespace RemoteBrowserMobProxy.DataClasses
+﻿namespace RemoteBrowserMobProxy.Data
 {
     public class WaitTimeouts
     {

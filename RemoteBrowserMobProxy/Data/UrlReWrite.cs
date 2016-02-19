@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace RemoteBrowserMobProxy.DataClasses
+namespace RemoteBrowserMobProxy.Data
 {
     public class UrlReWrite
     {

@@ -1,5 +1,4 @@
 ﻿using System;
-using NUnit.Framework;
 
 namespace RemoteBrowserMobProxy.Tests
 {
@@ -9,17 +8,17 @@ namespace RemoteBrowserMobProxy.Tests
         protected RemoteBrowserMobProxyClient Client;
         protected RemoteBrowserMobProxyInstance ProxyInstance;
 
-        public void FixtureSetup()
+        public virtual void FixtureSetup()
         {
             Client = new RemoteBrowserMobProxyClient(new Uri("http://localhost:9000/proxy"));
         }
 
-        public void Setup()
+        public virtual void Setup()
         {
             ProxyInstance = Client.NewRemoteBrowserMobProxyInstance();
         }
 
-        public void TearDown()
+        public virtual void TearDown()
         {
             ProxyInstance.Dispose();
         }     

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Flurl;
-using RemoteBrowserMobProxy.DataClasses.Response;
+using RemoteBrowserMobProxy.Data.Response;
 using RestSharp;
 
 namespace RemoteBrowserMobProxy
 {
     public class RemoteBrowserMobProxyClient
     {
-        private IRestClient _restClient;
+        private readonly IRestClient _restClient;
 
         public RemoteBrowserMobProxyClient(Uri browserMobProxyRemoteUri)
         {
@@ -51,9 +51,9 @@ namespace RemoteBrowserMobProxy
 
             var res = _restClient.Execute<CreateHarResponse>(req);
 
-            var url=Url.Combine(_restClient.BaseUrl.ToString(), res.Data.port.ToString());
+            var url=Url.Combine(_restClient.BaseUrl.ToString(), res.Data.Port.ToString());
 
-            return new RemoteBrowserMobProxyInstance(new Uri(url),res.Data.port);
+            return new RemoteBrowserMobProxyInstance(new Uri(url),res.Data.Port);
         }
     }
 }

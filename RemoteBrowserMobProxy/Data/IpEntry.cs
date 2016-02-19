@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RemoteBrowserMobProxy.DataClasses
+namespace RemoteBrowserMobProxy.Data
 {
     public class IpEntry
     {

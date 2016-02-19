@@ -1,7 +1,6 @@
 ﻿using System.Net;
-using Flurl.Http.Testing;
 using NUnit.Framework;
-using RemoteBrowserMobProxy.DataClasses;
+using RemoteBrowserMobProxy.Data;
 
 namespace RemoteBrowserMobProxy.Tests
 {
