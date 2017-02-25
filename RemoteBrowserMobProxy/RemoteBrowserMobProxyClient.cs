@@ -9,17 +9,30 @@ using RestSharp;
 
 namespace RemoteBrowserMobProxy
 {
-    public class RemoteBrowserMobProxyClient
+    public interface IRemoteBrowserMobProxyClient
+    {
+        IReadOnlyCollection<IRemoteBrowserMobProxyInstance> RemoteBrowserMobProxyInstances();
+        IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress, int port);
+        IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(int port);
+        IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress);
+        IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance();
+    }
+
+    public class RemoteBrowserMobProxyClient : IRemoteBrowserMobProxyClient
     {
         private readonly IRestClient _restClient;
 
-        public RemoteBrowserMobProxyClient(Uri browserMobProxyRemoteUri)
+        internal RemoteBrowserMobProxyClient(IRestClient restClient)
         {
-            _restClient=new RestClient(browserMobProxyRemoteUri);
-            
+            _restClient = restClient;
         }
 
-        public IReadOnlyCollection<RemoteBrowserMobProxyInstance> RemoteBrowserMobProxyInstances()
+        public RemoteBrowserMobProxyClient(Uri browserMobProxyRemoteUri):this(new RestClient(browserMobProxyRemoteUri))
+        {
+
+        }
+
+        public IReadOnlyCollection<IRemoteBrowserMobProxyInstance> RemoteBrowserMobProxyInstances()
         {
             var req = new RestRequest(Method.GET);
 
@@ -29,10 +42,26 @@ namespace RemoteBrowserMobProxy
                 res.Data.Select(
                     portNum =>
                         new RemoteBrowserMobProxyInstance(new Uri(_restClient.BaseUrl,
-                            new Uri(portNum.ToString())),portNum)).ToList().AsReadOnly();
+                            new Uri(portNum.ToString(), UriKind.Relative)), portNum)).ToList().AsReadOnly();
         }
 
-        public RemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress=null, int port = 0)
+        public IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance()
+        {
+            return NewRemoteBrowserMobProxyInstance(null, 0);
+        }
+
+        public IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress)
+        {
+            return NewRemoteBrowserMobProxyInstance(ip4BindingAddress, 0);
+        }
+
+        public IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(int port)
+        {
+            return NewRemoteBrowserMobProxyInstance(null, port);
+        }
+
+
+        public IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress, int port)
         {
             var req = new RestRequest(Method.POST);
 

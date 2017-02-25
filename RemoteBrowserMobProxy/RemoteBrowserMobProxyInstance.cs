@@ -6,21 +6,64 @@ using RestSharp;
 
 namespace RemoteBrowserMobProxy
 {
-    public class RemoteBrowserMobProxyInstance:IDisposable
+    public interface IRemoteBrowserMobProxyInstance : IDisposable
     {
-        private readonly RestClient _restClient;
+        int Port { get; }
+        string CreateHar();
+        string CreateHar(HarOptions options);
+        void StartNewPageInHar(HarPageOptions options);
+        string GetHarContentString();
+        Har GetHarContent();
+        void SetWhiteList(WhiteList whiteList);
+        WhiteList GetWhiteList();
+        void ClearWhiteList();
+        void GetBlackListUrl();
+        void SetBlackListUrl(BlackList blackList);
+        void ClearBlackListUrl();
+        void LimitBandwidth(BandwidthLimits bandwidthLimits);
+        void GetBandwidthLimits();
+        void SetHeaders(Dictionary<string, string> headers);
+        void OverrideDnsLookups(Dictionary<string, IpEntry> dnsEntries);
+        void SetBasicAuth(List<UserAccount> users);
+        void SetWaitTimeouts(WaitTimeouts waitTimeouts);
+        void SetProxyTimeouts(ProxyTimeouts proxyTimeouts);
+        void AddUrlReWrite(UrlReWrite urlReWrite);
+        void ClearUrlReWrites();
+        void SetRetryCount(int count);
+        void ClearDnsCache();
+    }
+
+    public class RemoteBrowserMobProxyInstance: IRemoteBrowserMobProxyInstance
+    {
+        private const string HarHandeler = "har";
+        private const string WhiteListHandler = "whitelist";
+        private const string BlackListHandler = "blacklist";
+        private const string LimitHandler = "limit";
+        private const string ReWriteHandler = "rewrite";
+
+        private readonly IRestClient _restClient;
 
         public int Port { get; private set; }
 
-        public RemoteBrowserMobProxyInstance(Uri remoteBrowserMobProxyInstanceUri,int port)
+        internal RemoteBrowserMobProxyInstance(IRestClient restClient, int port)
         {
-            _restClient=new RestClient(remoteBrowserMobProxyInstanceUri);
-            Port = port;
+            _restClient = restClient;
+            Port = port;    
+        }
+
+        public RemoteBrowserMobProxyInstance(Uri remoteBrowserMobProxyInstanceUri,int port):this(new RestClient(remoteBrowserMobProxyInstanceUri),port)
+        {
+
+        }
+
+        public string CreateHar()
+        {
+            return CreateHar(new HarOptions());
         }
 
         public string CreateHar(HarOptions options)
         {
-            var req = new RestRequest("har", Method.PUT);
+            var req = new RestRequest(HarHandeler, Method.PUT);
 
             req.AddObject(options);
             var res = _restClient.Execute(req);
@@ -30,30 +73,29 @@ namespace RemoteBrowserMobProxy
 
         public void StartNewPageInHar(HarPageOptions options)
         {
-            var req = new RestRequest("har", Method.PUT);
+            var req = new RestRequest(HarHandeler + "/pageRef", Method.PUT);
 
             req.AddObject(options);
-            var res = _restClient.Execute(req);
+            _restClient.Execute(req);
         }
 
-        public string GetHarContentString(HarOptions options)
+        public string GetHarContentString()
         {
-            var req = new RestRequest("har", Method.GET);
+            var req = new RestRequest(HarHandeler, Method.GET);
 
-            req.AddObject(options);
             var res = _restClient.Execute(req);
             return res.Content;
         }
 
-        public Har GetHarContent(HarOptions options)
+        public Har GetHarContent()
         {
-            var harString = GetHarContentString(options);
+            var harString = GetHarContentString();
             return HarConvert.Deserialize(harString);
         }
 
         public void SetWhiteList(WhiteList whiteList)
         {
-            var req = new RestRequest("whiteList",Method.PUT);
+            var req = new RestRequest(WhiteListHandler, Method.PUT);
 
             req.AddObject(whiteList);
 
@@ -62,48 +104,48 @@ namespace RemoteBrowserMobProxy
 
         public WhiteList GetWhiteList()
         {
-            var req = new RestRequest("whiteList",Method.GET);
+            var req = new RestRequest(WhiteListHandler, Method.GET);
 
-            var res=_restClient.Execute <WhiteList>(req);
+            var res = _restClient.Execute<WhiteList>(req);
 
             return res.Data;
         }
 
         public void ClearWhiteList()
         {
-            var req = new RestRequest("whiteList", Method.DELETE);
+            var req = new RestRequest(WhiteListHandler, Method.DELETE);
 
             _restClient.Execute(req);
         }
 
         public void GetBlackListUrl()
         {
-            var req = new RestRequest("blacklist", Method.GET);
+            var req = new RestRequest(BlackListHandler, Method.GET);
             _restClient.Execute(req);
         }
 
         public void SetBlackListUrl(BlackList blackList)
         {
-            var req = new RestRequest("blacklist", Method.PUT);
+            var req = new RestRequest(BlackListHandler, Method.PUT);
 
             _restClient.Execute(req);
         }
 
         public void ClearBlackListUrl()
         {
-            var req = new RestRequest("blacklist", Method.DELETE);
+            var req = new RestRequest(BlackListHandler, Method.DELETE);
             _restClient.Execute(req);
         }
 
         public void LimitBandwidth(BandwidthLimits bandwidthLimits)
         {
-            var res = new RestRequest("limit", Method.POST);
+            var res = new RestRequest(LimitHandler, Method.POST);
             _restClient.Execute(res);
         }
 
         public void GetBandwidthLimits()
         {
-            var res = new RestRequest("limit", Method.GET);
+            var res = new RestRequest(LimitHandler, Method.GET);
             _restClient.Execute(res);
         }
 
@@ -148,14 +190,14 @@ namespace RemoteBrowserMobProxy
 
         public void AddUrlReWrite(UrlReWrite urlReWrite)
         {
-            var req = new RestRequest("rewrite", Method.PUT);
+            var req = new RestRequest(ReWriteHandler, Method.PUT);
             req.AddObject(urlReWrite);
             _restClient.Execute(req);
         }
 
         public void ClearUrlReWrites()
         {
-            var req = new RestRequest("rewrite", Method.DELETE);
+            var req = new RestRequest(ReWriteHandler, Method.DELETE);
             _restClient.Execute(req);
         }
 
@@ -175,7 +217,7 @@ namespace RemoteBrowserMobProxy
         private void ShutdownProxyInstance()
         {
             var req = new RestRequest(Method.DELETE);
-            var res = _restClient.Execute(req);
+            _restClient.Execute(req);
         }
 
         public void Dispose()
