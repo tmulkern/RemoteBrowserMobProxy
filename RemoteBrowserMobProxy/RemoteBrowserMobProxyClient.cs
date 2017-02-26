@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Flurl;
 using RemoteBrowserMobProxy.Data.Response;
 using RestSharp;
 
@@ -80,7 +79,7 @@ namespace RemoteBrowserMobProxy
 
             var res = _restClient.Execute<CreateHarResponse>(req);
 
-            var url=Url.Combine(_restClient.BaseUrl.ToString(), res.Data.Port.ToString());
+            var url = string.Format("{0}/{1}", _restClient.BaseUrl, res.Data.Port);
 
             return new RemoteBrowserMobProxyInstance(new Uri(url),res.Data.Port);
         }
