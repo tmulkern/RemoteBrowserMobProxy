@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteBrowserMobProxy", "RemoteBrowserMobProxy\RemoteBrowserMobProxy.csproj", "{A414C7ED-7DC3-497C-ABC3-04F8C53A243B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteBrowserMobProxy.Tests", "RemoteBrowserMobProxy.Tests\RemoteBrowserMobProxy.Tests.csproj", "{17926165-E786-4C9E-8BE5-EEF13CFAD1DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{0DEFF15A-ABC5-44DE-ADFD-A3CDC846BF23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{17926165-E786-4C9E-8BE5-EEF13CFAD1DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17926165-E786-4C9E-8BE5-EEF13CFAD1DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17926165-E786-4C9E-8BE5-EEF13CFAD1DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DEFF15A-ABC5-44DE-ADFD-A3CDC846BF23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DEFF15A-ABC5-44DE-ADFD-A3CDC846BF23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DEFF15A-ABC5-44DE-ADFD-A3CDC846BF23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DEFF15A-ABC5-44DE-ADFD-A3CDC846BF23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7406935-488E-4513-A89A-A1C808EC1C0B}
 	EndGlobalSection
 EndGlobal
