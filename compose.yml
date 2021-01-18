@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+
+  hub:
+    image: selenium/hub:3.141.59-20210105
+    ports:
+      - 4444:4444
+
+  browsermobproxy:
+    image: bwowk/browsermob-proxy:2.1.4
+    ports:
+      - 58081-58200:8081-8200
+      - 58080:8080
+
+  chrome:
+    image: selenium/node-chrome:3.141.59-20210105
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub

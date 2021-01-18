@@ -1,0 +1,29 @@
+version: '1.0.{build}'
+image: Visual Studio 2017
+branches:
+  only:
+  - master
+init:
+  # because Windows line endings are different from Unix/Linux ones
+  - cmd: git config --global core.autocrlf true
+before_build:
+  # Display .NET Core version
+  - cmd: dotnet --version
+  # Display minimal restore text
+  - cmd: dotnet restore .\RemoteBrowserMobProxy\RemoteBrowserMobProxy.csproj
+build_script:
+  # output will be in .\RemoteBrowserMobProxy\RemoteBrowserMobProxy\bin\Debug\netstandard2.0\publish\
+  - cmd: nuget pack .\RemoteBrowserMobProxy\RemoteBrowserMobProxy.nuspec -Version %APPVEYOR_BUILD_VERSION%
+after_build:
+  # For once the build has completed
+artifacts:
+ - path: '.\*.nupkg'
+clone_depth: 1
+test_script:
+  # restore packages for our unit tests
+  - cmd: dotnet restore .\RemoteBrowserMobProxy.Tests\RemoteBrowserMobProxy.Tests.csproj
+  # run the unit tests (requires changing into the test directory)
+  - cmd: dotnet test .\RemoteBrowserMobProxy.Tests\RemoteBrowserMobProxy.Tests.csproj
+on_finish :
+  # any cleanup in here
+deploy: off

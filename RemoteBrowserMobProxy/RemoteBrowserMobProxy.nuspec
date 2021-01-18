@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>RemoteBrowserMobProxy</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
+    <title>RemoteBrowserMobProxy</title>
+    <authors>RemoteBrowserMobProxy</authors>
     <owners>$author$</owners>
     <projectUrl>https://github.com/tmulkern/RemoteBrowserMobProxy</projectUrl>
-    <description>$description$</description>
+    <description>RemoteBrowserMobProxy</description>
     <tags>BrowserMob Proxy</tags>
   </metadata>
 </package>

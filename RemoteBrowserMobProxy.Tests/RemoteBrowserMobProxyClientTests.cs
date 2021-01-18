@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Moq;
 using NUnit.Framework;
+using RemoteBrowserMobProxy.Data;
 using RemoteBrowserMobProxy.Data.Response;
 using RestSharp;
 
@@ -23,7 +24,6 @@ namespace RemoteBrowserMobProxy.Tests
 
             _restClientMoq = new Mock<IRestClient>();
             _restClientMoq.SetupGet(x => x.BaseUrl).Returns(_clientUri);
-
             _remoteBrowserMobProxyClient = new RemoteBrowserMobProxyClient(_restClientMoq.Object);
         }
 
@@ -32,7 +32,7 @@ namespace RemoteBrowserMobProxy.Tests
         {
             Assert.DoesNotThrow(
                 () =>
-                    new RemoteBrowserMobProxyClient(_clientUri));
+                    new RemoteBrowserMobProxyClient(_restClientMoq.Object));
         }
 
         [Test]
@@ -41,14 +41,15 @@ namespace RemoteBrowserMobProxy.Tests
             //Assemble
             IRestRequest req = null;
             var portList = new List<int> {9001, 9002, 9003};
-            _restClientMoq.Setup(x => x.Execute<List<int>>(It.IsAny<IRestRequest>()))
+            var proxyList = new Proxies() {ProxyList = portList.Select(p => new PortDetails() {Port = p}).ToList()};
+            _restClientMoq.Setup(x => x.Execute<Proxies>(It.IsAny<IRestRequest>()))
                 .Callback<IRestRequest>(request => req = request)
-                .Returns(new RestResponse<List<int>> { Data = portList });
+                .Returns(new RestResponse<Proxies> { Data = proxyList });
 
             var list=_remoteBrowserMobProxyClient.RemoteBrowserMobProxyInstances();
 
             //Assert
-            _restClientMoq.Verify(x => x.Execute<List<int>>(It.IsAny<IRestRequest>()), Times.Once);
+            _restClientMoq.Verify(x => x.Execute<Proxies>(It.IsAny<IRestRequest>()), Times.Once);
 
             Assert.AreEqual(Method.GET,req.Method);
             Assert.IsEmpty(req.Parameters);
@@ -74,7 +75,13 @@ namespace RemoteBrowserMobProxy.Tests
             //Assert
             _restClientMoq.Verify(x => x.Execute<CreateHarResponse>(It.IsAny<IRestRequest>()),Times.Once);
 
-            Assert.IsEmpty(req.Parameters);
+            Assert.Multiple(() =>
+            {
+                Assert.That(req.Parameters.Count, Is.EqualTo(2));
+                Assert.IsTrue(req.Parameters.ToList().Any(p=>p.Name.Equals("useEcc")));
+                Assert.IsTrue(req.Parameters.ToList().Any(p => p.Name.Equals("trustAllServers")));
+            });
+
             Assert.AreEqual(9001, instance.Port);
         }
 

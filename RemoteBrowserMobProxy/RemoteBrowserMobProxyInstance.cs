@@ -45,7 +45,7 @@ namespace RemoteBrowserMobProxy
 
         public int Port { get; private set; }
 
-        internal RemoteBrowserMobProxyInstance(IRestClient restClient, int port)
+        public RemoteBrowserMobProxyInstance(IRestClient restClient, int port)
         {
             _restClient = restClient;
             Port = port;    
