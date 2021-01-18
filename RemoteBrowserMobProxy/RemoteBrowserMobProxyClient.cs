@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using RemoteBrowserMobProxy.Data;
 using RemoteBrowserMobProxy.Data.Response;
 using RestSharp;
 
@@ -11,7 +12,7 @@ namespace RemoteBrowserMobProxy
     public interface IRemoteBrowserMobProxyClient
     {
         IReadOnlyCollection<IRemoteBrowserMobProxyInstance> RemoteBrowserMobProxyInstances();
-        IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress, int port);
+        IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress, int port, bool useEcc = true, bool trustAllServers = true);
         IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(int port);
         IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress);
         IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance();
@@ -21,12 +22,12 @@ namespace RemoteBrowserMobProxy
     {
         private readonly IRestClient _restClient;
 
-        internal RemoteBrowserMobProxyClient(IRestClient restClient)
+        public RemoteBrowserMobProxyClient(IRestClient restClient)
         {
             _restClient = restClient;
         }
 
-        public RemoteBrowserMobProxyClient(Uri browserMobProxyRemoteUri):this(new RestClient(browserMobProxyRemoteUri))
+        public RemoteBrowserMobProxyClient(Uri browserMobProxyRemoteUri):this(new RestClient(new Uri(browserMobProxyRemoteUri,new Uri($"proxy", UriKind.Relative))))
         {
 
         }
@@ -35,13 +36,17 @@ namespace RemoteBrowserMobProxy
         {
             var req = new RestRequest(Method.GET);
 
-            var res=_restClient.Execute<List<int>>(req);
+            var res=_restClient.Execute<Proxies>(req);
 
-            return
-                res.Data.Select(
-                    portNum =>
-                        new RemoteBrowserMobProxyInstance(new Uri(_restClient.BaseUrl,
-                            new Uri(portNum.ToString(), UriKind.Relative)), portNum)).ToList().AsReadOnly();
+            var tt = res.Data.ProxyList.Select(p =>
+            {
+                var uri = new Uri(_restClient.BaseUrl,
+                    new Uri("proxy", UriKind.Relative));
+                var finalUri = new Uri($"{uri.AbsoluteUri}/{p.Port}");
+                return new RemoteBrowserMobProxyInstance(finalUri, p.Port);
+            }).ToList().AsReadOnly();
+
+            return tt;
         }
 
         public IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance()
@@ -60,9 +65,11 @@ namespace RemoteBrowserMobProxy
         }
 
 
-        public IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress, int port)
+        public IRemoteBrowserMobProxyInstance NewRemoteBrowserMobProxyInstance(IPAddress ip4BindingAddress, int port, bool useEcc = true, bool trustAllServers = true)
         {
             var req = new RestRequest(Method.POST);
+            req.AddParameter("useEcc", useEcc);
+            req.AddParameter("trustAllServers", trustAllServers);
 
             if (port != 0)
             {
