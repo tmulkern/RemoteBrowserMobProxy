@@ -13,7 +13,7 @@ before_build:
   - cmd: dotnet restore .\RemoteBrowserMobProxy\RemoteBrowserMobProxy.csproj --verbosity m
 build_script:
   # output will be in .\RemoteBrowserMobProxy\RemoteBrowserMobProxy\bin\Debug\netstandard2.0\publish\
-  - cmd: nuget pack .\RemoteBrowserMobProxy\RemoteBrowserMobProxy.nuspec -Version 1.0.{build}
+  - cmd: nuget pack .\RemoteBrowserMobProxy\RemoteBrowserMobProxy.nuspec -Version 1.0.%APPVEYOR_BUILD_VERSION%
 after_build:
   # For once the build has completed
 artifacts:
