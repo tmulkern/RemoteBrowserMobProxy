@@ -137,10 +137,14 @@ namespace RemoteBrowserMobProxy
             _restClient.Execute(req);
         }
 
-        public void LimitBandwidth(BandwidthLimits bandwidthLimits)
+        public void LimitBandwidth(BandwidthLimits bandwidthLimits, List<string> names)
         {
-            var res = new RestRequest(LimitHandler, Method.POST);
-            _restClient.Execute(res);
+            var req = new RestRequest("limit", Method.PUT);
+            foreach (string name in names)
+            {
+                req.AddObject(bandwidthLimits, name);
+            }
+            _restClient.Execute(req);
         }
 
         public void GetBandwidthLimits()
